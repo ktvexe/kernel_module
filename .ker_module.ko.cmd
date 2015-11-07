@@ -1,0 +1,1 @@
+cmd_/home/ktvexe/kernel_module/ker_module.ko := ld -r -m elf_i386 -T ./scripts/module-common.lds --build-id  -o /home/ktvexe/kernel_module/ker_module.ko /home/ktvexe/kernel_module/ker_module.o /home/ktvexe/kernel_module/ker_module.mod.o

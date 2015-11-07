@@ -5,7 +5,7 @@ PWD         := $(shell pwd)
 KVERSION    := $(shell uname -r)
 KERNEL_DIR   = /usr/src/linux-headers-$(KVERSION)/
 
-MODULE_NAME  = hello
+MODULE_NAME  = ker_module
 obj-m       := $(MODULE_NAME).o   
 
 all:
