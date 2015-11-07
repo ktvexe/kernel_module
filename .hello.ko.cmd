@@ -1,1 +1,0 @@
-cmd_/home/ktvexe/kernel_module/hello.ko := ld -r -m elf_i386 -T ./scripts/module-common.lds --build-id  -o /home/ktvexe/kernel_module/hello.ko /home/ktvexe/kernel_module/hello.o /home/ktvexe/kernel_module/hello.mod.o
