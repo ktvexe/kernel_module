@@ -26,13 +26,13 @@ MODULE_PARM_DESC(pid,"integer");
 /*task struct pointer to do process search*/
 struct task_struct *task;
 
-static int ker_proc_show(struct seq_file *m, void *v) {
+static int ker_proc_show(struct seq_file *ker, void *v) {
 	/*case of showing all process*/
 	if(!strcmp(command,"showall")){
     	/*run the task pointer for each one and print to file*/
 		for_each_process(task){
-	    	seq_printf(m,"%-20s pid:[%d]\n", task->comm, task->pid);
-	    	seq_printf(m,"		parent: %-20s pid:[%d]\n", task->parent->comm, task->parent->pid);
+	    	seq_printf(ker,"%-20s pid:[%d]\n", task->comm, task->pid);
+	    	seq_printf(ker,"		parent: %-20s pid:[%d]\n", task->parent->comm, task->parent->pid);
 			
 		}
 	}
@@ -41,30 +41,30 @@ static int ker_proc_show(struct seq_file *m, void *v) {
 		struct task_struct  *task2;
 		bool flag =false;
 		if(pid < 0){
-			seq_printf(m,"incorrect pid:%d\n",pid);
+			seq_printf(ker,"incorrect pid:%d\n",pid);
 			return -1;
 		}
 		/*run the task pointer to search process*/
 		for_each_process(task) {
         	if ( task->pid == pid ){
-				seq_printf(m,"Current:\n");
-				seq_printf(m,"		%-20s  pid:[%d]\n",task->comm,task->pid);
-				seq_printf(m,"Parent:\n");
-				seq_printf(m,"		%-20s  pid:[%d]\n",task->parent->comm,task->parent->pid);
-				seq_printf(m,"Child:\n");
+				seq_printf(ker,"Current:\n");
+				seq_printf(ker,"		%-20s  pid:[%d]\n",task->comm,task->pid);
+				seq_printf(ker,"Parent:\n");
+				seq_printf(ker,"		%-20s  pid:[%d]\n",task->parent->comm,task->parent->pid);
+				seq_printf(ker,"Child:\n");
 				for_each_children( task2 , task ){
-					seq_printf(m,"		%-20s (pid:%d)\n", task2->comm, task2->pid);
+					seq_printf(ker,"		%-20s (pid:%d)\n", task2->comm, task2->pid);
 				}
         		flag=true;
 			}
 		}
 		if(!flag){
-			seq_printf(m,"pid:%d does not exist!!\n",pid);
+			seq_printf(ker,"pid:%d does not exist!!\n",pid);
 		}
 	}
 	/*case of print arrgument to file*/
 	else{
-		seq_printf(m, "%s\n",command);
+		seq_printf(ker, "%s\n",command);
 	}
 
 	return 0;
@@ -79,6 +79,10 @@ static int ker_proc_open(struct inode *inode, struct  file *file) {
 
 /*by proc_create*/
 static const struct file_operations ker_proc_fops = {
+	/*
+	used basic function : seq_read ,seq_lseek,and single_release
+	And a user defined function : ker_proc_open
+	*/
 	.owner = THIS_MODULE,
 	.open = ker_proc_open,
 	.read = seq_read,
